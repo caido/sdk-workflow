@@ -17,6 +17,7 @@ export declare type Console = {
  * Calling `to<FORMAT>` will try to convert the body to the desired format.
  */
 export declare class Body {
+  constructor(data: string | Array<number> | Uint8Array);
   /**
    * Parse the body as a string.
    *
@@ -57,6 +58,7 @@ export declare type Request = {
  * A mutable Request not yet sent.
  */
 export declare class RequestSpec {
+  constructor(url: string);
   getHost(): string;
   setHost(host: string): void;
   getPort(): number;
