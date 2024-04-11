@@ -18,7 +18,7 @@
   <hr />
 </div>
 
-## 👋 Frontend SDK
+## 👋 Workflow SDK
 
 [![NPM Version](https://img.shields.io/npm/v/@caido/sdk-workflow?style=for-the-badge)](https://www.npmjs.com/package/@caido/sdk-workflow)
 
