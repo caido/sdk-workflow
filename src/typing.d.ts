@@ -4,7 +4,7 @@
  * Currently logs are only available in the backend logs.
  * See https://docs.caido.io/report_bug.html#1-backend-logs
  */
-declare type Console = {
+export declare type Console = {
   debug(message: any): void;
   log(message: any): void;
   warn(message: any): void;
@@ -16,8 +16,7 @@ declare type Console = {
  *
  * Calling `to<FORMAT>` will try to convert the body to the desired format.
  */
-declare class Body {
-  constructor(data: string | Array<number> | Uint8Array);
+export declare class Body {
   /**
    * Parse the body as a string.
    *
@@ -41,7 +40,7 @@ declare class Body {
  *
  * To modify, use `toSpec` to get a `RequestSpec` object.
  */
-declare type Request = {
+export declare type Request = {
   getId(): ID;
   getHost(): string;
   getPort(): number;
@@ -57,8 +56,7 @@ declare type Request = {
 /**
  * A mutable Request not yet sent.
  */
-declare class RequestSpec {
-  constructor(url: string);
+export declare class RequestSpec {
   getHost(): string;
   setHost(host: string): void;
   getPort(): number;
@@ -80,7 +78,7 @@ declare class RequestSpec {
 /**
  * An immutable saved Response.
  */
-declare type Response = {
+export declare type Response = {
   getId(): ID;
   getCode(): number;
   getHeader(name: string): Array<string> | undefined;
@@ -90,7 +88,7 @@ declare type Response = {
 /**
  * An immutable saved Request and Response pair.
  */
-declare type RequestReponse = {
+export declare type RequestReponse = {
   request: Request;
   response: Response;
 };
@@ -98,7 +96,7 @@ declare type RequestReponse = {
 /**
  * The SDK for the Requests service.
  */
-declare type RequestsSDK = {
+export declare type RequestsSDK = {
   /**
    * Sends a request.
    *
@@ -125,7 +123,7 @@ declare type RequestsSDK = {
  *
  * To modify, use `toSpec` to get a `FindingSpec` object.
  */
-declare type Finding = {
+export declare type Finding = {
   getId(): ID;
   getTitle(): string;
   getDescription(): string | undefined;
@@ -135,7 +133,7 @@ declare type Finding = {
 /**
  * A mutable Finding not yet created.
  */
-declare type FindingSpec = {
+export declare type FindingSpec = {
   title: string;
   description?: string | undefined;
   reporter: string;
@@ -145,7 +143,7 @@ declare type FindingSpec = {
 /**
  * The SDK for the Findings service.
  */
-declare type FindingsSDK = {
+export declare type FindingsSDK = {
   /**
    * Creates a new Finding.
    *
@@ -162,22 +160,22 @@ declare type FindingsSDK = {
   create(spec: FindingSpec): Promise<Finding>;
 };
 
-declare type PassiveInput = {
+export declare type PassiveInput = {
   request: Request | undefined;
   response: Response | undefined;
 };
-declare type ConvertInput = Array<number>;
+export declare type ConvertInput = Array<number>;
 
-declare type ID = string;
-declare type Data = Bytes;
-declare type Decision = boolean;
-declare type Bytes = string | Array<number> | Uint8Array;
-declare type MaybePromise<T> = T | Promise<T>;
+export declare type ID = string;
+export declare type Data = Bytes;
+export declare type Decision = boolean;
+export declare type Bytes = string | Array<number> | Uint8Array;
+export declare type MaybePromise<T> = T | Promise<T>;
 
 /**
  * The SDK object available to all scripts.
  */
-declare type SDK = {
+export declare type SDK = {
   /**
    * The console.
    *
