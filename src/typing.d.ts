@@ -49,9 +49,19 @@ export declare type Request = {
   getMethod(): string;
   getPath(): string;
   getQuery(): string;
+  getHeaders(): Record<string, Array<string>>;
   getHeader(name: string): Array<string> | undefined;
   getBody(): Body | undefined;
   toSpec(): RequestSpec;
+};
+
+type SetBodyOptions = {
+  /**
+   * Should update the Content-Type header.
+   *
+   * @default true
+   */
+  updateContentLength: boolean;
 };
 
 /**
@@ -71,10 +81,12 @@ export declare class RequestSpec {
   setPath(path: string): void;
   getQuery(): string;
   setQuery(query: string): void;
+  getHeaders(): Record<string, Array<string>>;
   getHeader(name: string): Array<string> | undefined;
   setHeader(name: string, value: string): void;
+  removeHeader(name: string): void;
   getBody(): Body | undefined;
-  setBody(body: Body | Bytes): void;
+  setBody(body: Body | Bytes, options?: SetBodyOptions): void;
 }
 
 /**
@@ -83,6 +95,7 @@ export declare class RequestSpec {
 export declare type Response = {
   getId(): ID;
   getCode(): number;
+  getHeaders(): Record<string, Array<string>>;
   getHeader(name: string): Array<string> | undefined;
   getBody(): Body | undefined;
 };
@@ -90,7 +103,7 @@ export declare type Response = {
 /**
  * An immutable saved Request and Response pair.
  */
-export declare type RequestReponse = {
+export declare type RequestResponse = {
   request: Request;
   response: Response;
 };
@@ -108,7 +121,7 @@ export declare type RequestsSDK = {
    *
    * @example
    * const spec = new RequestSpec("https://example.com");
-   * sdk.send(request)
+   * sdk.requests.send(request)
    *   .then((res) => {
    *     console.log(res.request.getId());
    *     console.log(res.response.getCode());
@@ -117,7 +130,17 @@ export declare type RequestsSDK = {
    *     console.error(err);
    *   });
    */
-  send(request: RequestSpec): Promise<RequestReponse>;
+  send(request: RequestSpec): Promise<RequestResponse>;
+
+  /**
+   * Checks if a request is in scope.
+   *
+   * @example
+   * if (sdk.requests.inScope(request)) {
+   *  console.log("In scope");
+   * }
+   */
+  inScope(request: Request | RequestSpec): boolean;
 };
 
 /**
@@ -162,11 +185,19 @@ export declare type FindingsSDK = {
   create(spec: FindingSpec): Promise<Finding>;
 };
 
-export declare type PassiveInput = {
+export declare type HttpInput = {
   request: Request | undefined;
   response: Response | undefined;
 };
-export declare type ConvertInput = Array<number>;
+/**
+ * @deprecated Use HttpInput instead.
+ */
+export declare type PassiveInput = HttpInput;
+export declare type BytesInput = Array<number>;
+/**
+ * @deprecated Use BytesInput instead.
+ */
+export declare type ConvertInput = BytesInput;
 
 export declare type ID = string;
 export declare type Data = Bytes;
