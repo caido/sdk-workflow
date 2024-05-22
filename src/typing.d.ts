@@ -53,6 +53,7 @@ export declare type Request = {
   getHeader(name: string): Array<string> | undefined;
   getBody(): Body | undefined;
   toSpec(): RequestSpec;
+  toSpecRaw(): RequestSpecRaw;
 };
 
 type SetBodyOptions = {
@@ -87,6 +88,22 @@ export declare class RequestSpec {
   removeHeader(name: string): void;
   getBody(): Body | undefined;
   setBody(body: Body | Bytes, options?: SetBodyOptions): void;
+  setRaw(raw: Bytes): RequestSpecRaw;
+}
+
+/**
+ * A mutable raw Request not yet sent.
+ */
+export declare class RequestSpecRaw {
+  constructor(url: string);
+  getHost(): string;
+  setHost(host: string): void;
+  getPort(): number;
+  setPort(port: number): void;
+  getTls(): boolean;
+  setTls(tls: boolean): void;
+  getRaw(): Uint8Array;
+  setRaw(raw: Bytes): void;
 }
 
 /**
@@ -130,7 +147,7 @@ export declare type RequestsSDK = {
    *     console.error(err);
    *   });
    */
-  send(request: RequestSpec): Promise<RequestResponse>;
+  send(request: RequestSpec | RequestSpecRaw): Promise<RequestResponse>;
 
   /**
    * Checks if a request is in scope.
