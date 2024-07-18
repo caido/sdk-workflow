@@ -150,13 +150,23 @@ declare module "caido:utils" {
 
   /**
    * A saved immutable Finding.
-   *
-   * To modify, use `toSpec` to get a `FindingSpec` object.
    */
   export type Finding = {
+    /**
+     * The unique Caido {@link ID} of the finding.
+     */
     getId(): ID;
+    /**
+     * The title of the finding.
+     */
     getTitle(): string;
+    /**
+     * The description of the finding.
+     */
     getDescription(): string | undefined;
+    /**
+     * The name of the reporter.
+     */
     getReporter(): string;
   };
 
@@ -164,9 +174,27 @@ declare module "caido:utils" {
    * A mutable Finding not yet created.
    */
   export type FindingSpec = {
+    /**
+     * The title of the finding.
+     */
     title: string;
+    /**
+     * The description of the finding.
+     */
     description?: string | undefined;
+    /**
+     * The name of the reporter.
+     * It will be used to group findings.
+     */
     reporter: string;
+    /**
+     * Deduplication key for findings.
+     * If a finding with the same dedupe key already exists, it will not be created.
+     */
+    dedupeKey?: string | undefined;
+    /**
+     * The associated {@link Request}.
+     */
     request: Request;
   };
 
@@ -184,6 +212,7 @@ declare module "caido:utils" {
      *   title: "Title",
      *   description: "Description",
      *   reporter: "Reporter",
+     *   dedupe: `${request.getHost()}-${request.getPath()}`,
      *   request,
      * });
      */
