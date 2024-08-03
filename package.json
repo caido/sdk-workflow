@@ -7,5 +7,8 @@
   "types": "./src/index.d.ts",
   "files": [
     "src/*"
-  ]
+  ],
+  "dependencies": {
+    "@caido/quickjs-types": "0.1.0"
+  }
 }
