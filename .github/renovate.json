@@ -11,7 +11,7 @@
   "packageRules": [
     {
       "matchPackageNames": ["@caido/quickjs-types"],
-      "schedule": ["daily"],
+      "schedule": ["every day"],
       "stabilityDays": 0,
       "automerge": true
     }
