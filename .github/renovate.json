@@ -1,0 +1,19 @@
+{
+  "extends": ["config:recommended"],
+  "timezone": "America/New_York",
+  "schedule": ["every weekend"],
+  "labels": ["dependency"],
+  "rebaseWhen": "conflicted",
+  "stabilityDays": 14,
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 0,
+  "internalChecksFilter": "strict",
+  "packageRules": [
+    {
+      "matchPackageNames": ["@caido/quickjs-types"],
+      "schedule": ["daily"],
+      "stabilityDays": 0,
+      "automerge": true
+    }
+  ]
+}
