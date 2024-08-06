@@ -40,6 +40,7 @@ declare module "caido:utils" {
     getHeaders(): Record<string, Array<string>>;
     getHeader(name: string): Array<string> | undefined;
     getBody(): Body | undefined;
+    getCreatedAt(): Date;
     toSpec(): RequestSpec;
     toSpecRaw(): RequestSpecRaw;
   };
@@ -103,6 +104,8 @@ declare module "caido:utils" {
     getHeaders(): Record<string, Array<string>>;
     getHeader(name: string): Array<string> | undefined;
     getBody(): Body | undefined;
+    getRoundtripTime(): number;
+    getCreatedAt(): Date;
   };
 
   /**
@@ -114,9 +117,107 @@ declare module "caido:utils" {
   };
 
   /**
+   * Information on the current page of paginated data.
+   */
+  export type PageInfo = {
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+    startCursor: string;
+    endCursor: string;
+  };
+
+  export type RequestOrderField =
+    | "ext"
+    | "host"
+    | "id"
+    | "method"
+    | "path"
+    | "query"
+    | "created_at"
+    | "source";
+  export type ResponseOrderField = "length" | "roundtrip" | "code";
+
+  export type RequestsConnectionItem = {
+    cursor: string;
+    request: Request;
+    response?: Response;
+  };
+
+  export type RequestsConnection = {
+    pageInfo: PageInfo;
+    items: Array<RequestsConnectionItem>;
+  };
+
+  /**
+   * Query builder to fetch requests.
+   */
+  export type RequestsQuery = {
+    /**
+     * Requests after a given cursor.
+     * @param cursor Cursor of the request
+     */
+    after(cursor: string): RequestsQuery;
+
+    /**
+     * Requests before a given cursor.
+     * @param cursor Cursor of the request
+     */
+    before(cursor: string): RequestsQuery;
+
+    /**
+     * First n requests.
+     * @param n Number of requests to return
+     */
+    first(n: number): RequestsQuery;
+
+    /**
+     * Last n requests.
+     * @param n Number of requests to return
+     */
+    last(n: number): RequestsQuery;
+
+    /**
+     * Filter requests.
+     * @param filter HTTPQL filter
+     */
+    filter(filter: string): RequestsQuery;
+
+    /**
+     * Ascending ordering.
+     * @param target Target of the ordering: req or resp.
+     * @param field Field to order by.
+     */
+    ascending(target: "req", field: RequestOrderField): RequestsQuery;
+    ascending(target: "resp", field: ResponseOrderField): RequestsQuery;
+
+    /**
+     * Descending ordering.
+     * @param target Target of the ordering: req or resp.
+     * @param field Field to order by.
+     */
+    descending(target: "req", field: RequestOrderField): RequestsQuery;
+    descending(target: "resp", field: ResponseOrderField): RequestsQuery;
+
+    /**
+     * Execute the query.
+     *
+     * @throws {Error} If a query parameter is invalid or the query cannot be executed.
+     */
+    execute(): Promise<RequestsConnection>;
+  };
+
+  /**
    * The SDK for the Requests service.
    */
   export type RequestsSDK = {
+    /**
+     * Query requests of the current project.
+     *
+     * @example
+     * const page = await sqk.requests.query().first(2).execute();
+     * sdk.console.log(`ID: ${page.items[1].request.getId()}`);
+     */
+    query(): RequestsQuery;
     /**
      * Sends a request.
      *
@@ -126,14 +227,13 @@ declare module "caido:utils" {
      *
      * @example
      * const spec = new RequestSpec("https://example.com");
-     * sdk.requests.send(request)
-     *   .then((res) => {
-     *     console.log(res.request.getId());
-     *     console.log(res.response.getCode());
-     *   })
-     *   .catch((err) => {
-     *     console.error(err);
-     *   });
+     * try {
+     *   const res = await sdk.requests.send(request)
+     *   sdk.console.log(res.request.getId());
+     *   sdk.console.log(res.response.getCode());
+     * } catch (err) {
+     *   sdk.console.error(err);
+     * }
      */
     send(request: RequestSpec | RequestSpecRaw): Promise<RequestResponse>;
 
@@ -142,7 +242,7 @@ declare module "caido:utils" {
      *
      * @example
      * if (sdk.requests.inScope(request)) {
-     *  console.log("In scope");
+     *  sdk.console.log("In scope");
      * }
      */
     inScope(request: Request | RequestSpec): boolean;
@@ -208,7 +308,7 @@ declare module "caido:utils" {
      * @throws {Error} If the request cannot be saved.
      *
      * @example
-     * sdk.findings.create({
+     * await sdk.findings.create({
      *   title: "Title",
      *   description: "Description",
      *   reporter: "Reporter",
