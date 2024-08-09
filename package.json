@@ -9,6 +9,6 @@
     "src/*"
   ],
   "dependencies": {
-    "@caido/quickjs-types": "0.2.1"
+    "@caido/quickjs-types": "0.3.0"
   }
 }
